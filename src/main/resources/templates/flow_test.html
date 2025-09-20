@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>확장자 관리</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .extension-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .fixed-extensions {
+            margin-bottom: 30px;
+        }
+        
+        .extension-checkbox {
+            margin-right: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .custom-extension-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .extension-display-area {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            min-height: 100px;
+            background-color: #f9f9f9;
+        }
+        
+        .extension-counter {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .extension-tag {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .extension-tag:hover {
+            background-color: #0056b3;
+        }
+        
+        .extension-tag .remove-btn {
+            margin-left: 8px;
+            font-weight: bold;
+        }
+        #addBtn {
+            min-width: 100px; /* 기존보다 넓게 지정 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="extension-container">
+            <!-- 고정 확장자 섹션 -->
+            <div class="fixed-extensions">
+                <div class="section-title">고정 확장자</div>
+                <div class="extension-checkboxes">
+                    <div class="form-check form-check-inline extension-checkbox">
+                        <input class="form-check-input" type="checkbox" id="bat" value="bat">
+                        <label class="form-check-label" for="bat">bat</label>
+                    </div>
+                    <div class="form-check form-check-inline extension-checkbox">
+                        <input class="form-check-input" type="checkbox" id="cmd" value="cmd">
+                        <label class="form-check-label" for="cmd">cmd</label>
+                    </div>
+                    <div class="form-check form-check-inline extension-checkbox">
+                        <input class="form-check-input" type="checkbox" id="com" value="com">
+                        <label class="form-check-label" for="com">com</label>
+                    </div>
+                    <div class="form-check form-check-inline extension-checkbox">
+                        <input class="form-check-input" type="checkbox" id="cpl" value="cpl">
+                        <label class="form-check-label" for="cpl">cpl</label>
+                    </div>
+                    <div class="form-check form-check-inline extension-checkbox">
+                        <input class="form-check-input" type="checkbox" id="exe" value="exe">
+                        <label class="form-check-label" for="exe">exe</label>
+                    </div>
+                    <div class="form-check form-check-inline extension-checkbox">
+                        <input class="form-check-input" type="checkbox" id="scr" value="scr">
+                        <label class="form-check-label" for="scr">scr</label>
+                    </div>
+                    <div class="form-check form-check-inline extension-checkbox">
+                        <input class="form-check-input" type="checkbox" id="js" value="js">
+                        <label class="form-check-label" for="js">js</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 커스텀 확장자 섹션 -->
+            <div class="custom-extensions">
+                <div class="section-title">커스텀 확장자</div>
+                <div class="custom-extension-input">
+                    <input type="text" class="form-control" id="extensionInput" placeholder="영어만 입력 가능 (고정 확장자 제외)" maxlength="20" pattern="[a-zA-Z0-9]*" title="영어와 숫자만 입력 가능합니다">
+                    
+                    <button type="button" class="btn btn-secondary" id="addBtn">+추가</button>
+                </div>
+                
+                <div class="extension-display-area">
+                    <div class="extension-counter">
+                        <span id="extensionCount" th:text="${labelExtensionCount}">0</span>/200
+                    </div>
+                    <div id="extensionTags">
+                        <!-- 서버에서 전달받은 라벨 확장자들을 동적으로 렌더링 -->
+                        <span th:each="extension : ${labelExtensions}" 
+                              th:text="${extension.name}" 
+                              th:data-extension="${extension.name}"
+                              class="extension-tag">
+                            <span class="remove-btn">×</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 서버 데이터를 JavaScript로 전달 -->
+    <script th:inline="javascript">
+        window.serverData = {
+            checkExtensions: /*[[${checkExtensions}]]*/ [],
+            labelExtensions: /*[[${labelExtensions}]]*/ [],
+            labelExtensionCount: /*[[${labelExtensionCount}]]*/ 0
+        };
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/flow_test.js"></script>
+</body>
+</html>

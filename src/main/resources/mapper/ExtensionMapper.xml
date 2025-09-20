@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flow.test.mapper.ExtensionMapper">
+
+    <!-- 확장자 정보 ResultMap -->
+    <resultMap id="ExtensionResultMap" type="com.flow.test.domain.Extension">
+        <id property="idx" column="idx"/>
+        <result property="type" column="type"/>
+        <result property="name" column="name"/>
+        <result property="regId" column="reg_id"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modId" column="mod_id"/>
+        <result property="modDate" column="mod_date"/>
+    </resultMap>
+
+    <!-- 모든 확장자 조회 -->
+    <select id="selectAllExtensions" resultMap="ExtensionResultMap">
+        SELECT 
+            idx,
+            type,
+            name,
+            reg_id,
+            reg_date,
+            mod_id,
+            mod_date
+        FROM ext
+        ORDER BY type, name
+    </select>
+
+    <!-- 타입별 확장자 조회 -->
+    <select id="selectExtensionsByType" resultMap="ExtensionResultMap">
+        SELECT 
+            idx,
+            type,
+            name,
+            reg_id,
+            reg_date,
+            mod_id,
+            mod_date
+        FROM ext
+        WHERE type = #{type}
+        ORDER BY name
+    </select>
+
+    <!-- 확장자명으로 조회 -->
+    <select id="selectExtensionByName" resultMap="ExtensionResultMap">
+        SELECT 
+            idx,
+            type,
+            name,
+            reg_id,
+            reg_date,
+            mod_id,
+            mod_date
+        FROM ext
+        WHERE name = #{name}
+    </select>
+
+    <!-- 확장자 등록 -->
+    <insert id="insertExtension" parameterType="com.flow.test.domain.Extension" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO ext (
+            type,
+            name,
+            reg_id,
+            reg_date
+        ) VALUES (
+            #{type},
+            #{name},
+            #{regId},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <!-- 확장자 수정 -->
+    <update id="updateExtension" parameterType="com.flow.test.domain.Extension">
+        UPDATE ext
+        SET 
+            type = #{type},
+            name = #{name},
+            mod_id = #{modId},
+            mod_date = CURRENT_TIMESTAMP
+        WHERE idx = #{idx}
+    </update>
+
+    <!-- 확장자 삭제 (인덱스로) -->
+    <delete id="deleteExtension">
+        DELETE FROM ext
+        WHERE idx = #{idx}
+    </delete>
+
+    <!-- 확장자 삭제 (이름으로) -->
+    <delete id="deleteExtensionByName">
+        DELETE FROM ext
+        WHERE name = #{name}
+    </delete>
+
+    <!-- 확장자 존재 여부 확인 -->
+    <select id="existsExtensionByName" resultType="int">
+        SELECT COUNT(*)
+        FROM ext
+        WHERE name = #{name}
+    </select>
+
+</mapper>
